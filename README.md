@@ -1,7 +1,9 @@
 # Python Basics
-Python Basics
-<img src="https://www.codewars.com/users/aupatxus/badges/large"></img>
+Python Basics  
 https://formacion.thebridge.tech/  
+
+<img src="https://www.codewars.com/users/aupatxus/badges/large"></img>
+
 
 ![Data Science con IA](https://raw.githubusercontent.com/aupatxus/ONLINE_DS_THEBRIDGE_GitHub/refs/heads/main/Vital%20LANBIDE.png)
 
