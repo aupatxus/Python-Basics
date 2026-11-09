@@ -821,3 +821,148 @@ Un archivo `.gitignore` es un fichero de configuration plano situado en la raíz
 
 
 
+
+# Python: Programación Orientada a Objetos (POO)
+
+Este repositorio contiene la **Programación Orientada a Objetos (POO) en Python**. La POO es un paradigma fundamental que organiza el código alrededor de estructuraciones de datos denominadas "objetos" en lugar de funciones y lógica pura, permitiendo modelar conceptos de la vida real dentro del software para crear proyectos escalables, limpios y mantenibles.
+
+---
+
+## Índice
+1. [Paradigma Orientado a Objetos: Clases vs Objetos](#1-paradigma-orientado-a-objetos-clases-vs-objetos)
+2. [Atributos (Clase vs Instancia)](#2-atributos-clase-vs-instancia)
+3. [El Método Constructor y el Parámetro `self`](#3-el-método-constructor-y-el-parámetro-self)
+4. [Métodos de Instancia y Operaciones Dinámicas](#4-métodos-de-instancia-y-operaciones-dinámicas)
+5. [Documentación y el Atributo de Diagnóstico `__dict__`](#5-documentación-y-el-atributo-de-diagnóstico-__dict__)
+6. [Estructuras Avanzadas: Herencia](#6-estructuras-avanzadas-herencia)
+
+---
+
+## 1. Paradigma Orientado a Objetos: Clases vs Objetos
+
+En Python, **todo es un objeto** (desde un entero `int` hasta una cadena de texto `str`). Para traducir entidades reales a lenguaje de máquina, el paradigma se divide en dos componentes críticos:
+
+*   **Clase (El Plano/Plantilla)**: Es un esqueleto abstracto y genérico que define las propiedades y comportamientos estructurales que compartirá un tipo de dato. No es una entidad real en sí misma, sino el diseño arquitectónico de base.
+*   **Objeto o Instancia (El Producto Real)**: Es la materialización concreta construida a partir de la plantilla de la clase. Se pueden instanciar infinitos objetos independientes basados en una única clase; cada uno residirá en una dirección de memoria propia y tendrá estados particulares.
+
+### Sintaxis Base de Declaración e Instanciación
+El nombre de las clases debe definirse utilizando la convención estándar **CamelCase** (sin espacios ni guiones, separando palabras mediante mayúsculas intermedias).
+
+```python
+class Coche:
+    # La sentencia 'pass' actúa como marcador posicional temporal
+    pass
+
+# Instanciación de dos objetos independientes en memoria
+citroen = Coche()
+seat = Coche()
+
+print(type(Coche))       # Devuelve <class 'type'> porque es un molde genérico
+print(type(citroen))     # Devuelve <class '__main__.Coche'> porque es una instancia real
+```
+
+---
+
+## 2. Atributos (Clase vs Instancia)
+
+Los atributos son variables internas vinculadas directamente a una clase o a un objeto, encargadas de almacenar sus características estáticas o estados. Se clasifican rigurosamente en dos tipologías:
+
+### A. Atributos de Clase
+Son variables compartidas de forma idéntica por **todas** las instancias del programa. Se definen directamente en la raíz de la clase, fuera de cualquier función interna. 
+*   *Ejemplo*: Si todos los coches del modelo tienen de manera inalterable 4 ruedas, `ruedas = 4` se declara como atributo de clase.
+
+### B. Atributos de Instancia
+Son variables particulares asignadas de forma exclusiva a un objeto específico. Alterar este atributo en el objeto `A` jamás repercutirá en el estado del objeto `B`. Se instancian casi siempre dentro del constructor utilizando el puntero de referencia del objeto.
+
+```python
+class Coche:
+    ruedas = 4  # Atributo de Clase (Común a todas las instancias)
+
+    def __init__(self, marca):
+        self.marca = marca  # Atributo de Instancia (Particular de cada coche)
+```
+
+---
+
+## 3. El Método Constructor y el Parámetro `self`
+
+El constructor es una función interna de inicialización especializada que Python ejecuta **de forma automática** e inmediata cada vez que se crea un nuevo objeto en el sistema.
+
+*   **La Sentencia `__init__`**: Es el identificador reservado en Python para invocar al constructor. Los guiones bajos dobles denotan que se trata de un método mágico o especial (*dunder method*).
+*   **El Parámetro `self`**: Es **estrictamente obligatorio** declararlo como el primer parámetro tanto en el constructor como en cualquier método de instancia dentro de la clase. Representa la referencia exacta del objeto específico que se está creando u operando en ese instante de tiempo. Al llamar al objeto externamente, Python inyecta este parámetro de forma automática en segundo plano, por lo que el usuario no debe pasarlo de forma explícita.
+
+```python
+class Persona:
+    def __init__(self, nombre, edad):
+        self.nombre = nombre  # Vincula el argumento al atributo del objeto actual
+        self.edad = edad
+```
+
+---
+
+## 4. Métodos de Instancia y Operaciones Dinámicas
+
+Los métodos son funciones integradas en la estructura de la clase que dictaminan **las acciones que los objetos pueden ejecutar**. 
+
+*   **Acceso a Atributos**: Al igual que el constructor, necesitan recibir `self` en su cabecera para poder leer o reasignar los valores de los atributos del propio objeto operativo.
+*   **Modificación del Estado**: En Python es legal y directo mutar atributos inyectando asignaciones directas (`self.atributo = nuevo_valor`), omitiendo la necesidad mandatoria de otros lenguajes de implementar métodos explícitos *getters* y *setters*.
+
+```python
+class Coche:
+    def __init__(self, marca):
+        self.marca = marca
+        self.velocidad = 0  # Inicialización de estado estático base
+
+    def acelerar(self, incremento):
+        # El uso de self garantiza que modificamos solo este coche en el programa
+        self.velocidad += incremento
+        return f"El {self.marca} ahora va a {self.velocidad} km/h."
+```
+
+---
+
+## 5. Documentación y el Atributo de Diagnóstico `__dict__`
+
+La POO profesional exige mantener el código documentado de forma interactiva y auditable para entornos de producción.
+
+*   **Docstrings de Clase (`.__doc__`)**: Los bloques de comentarios explicativos multilínea (`"""`) situados en la cabecera de la clase y de sus métodos permiten inyectar la guía de uso de los parámetros. Se auditan en ejecución llamando a `print(Objeto.__doc__)`.
+*   **El Atributo Interno `.__dict__`**: Es una herramienta nativa de inspección crítica. Al invocarlo sobre una instancia, devuelve un **Diccionario (`dict`)** con el mapa exacto en formato `clave: valor` de todos los atributos particulares de instancia que posee el objeto en ese preciso instante de su ejecución.
+
+```python
+# Extracción de metadatos de diagnóstico en tiempo de ejecución
+print(citroen.__dict__)  # Output de ejemplo: {'marca': 'Citroen', 'puertas': 4}
+```
+
+---
+
+## 6. Estructuras Avanzadas: Herencia
+
+La **Herencia** es uno de los pilares de la programación orientada a objetos que permite crear una clase nueva (Clase Hija / Subclase) a partir de una clase preexistente (Clase Padre / Superclase). La clase hija **hereda de forma automática todos los atributos y métodos** de la clase padre, optimizando la reutilización de código.
+
+*   **Sintaxis**: Para heredar se pasa el nombre de la superclase entre paréntesis inmediatamente después del nombre de la subclase.
+*   **Especialización**: La clase hija puede redefinir atributos de la clase padre (sobrescritura) o incorporar métodos exclusivos que la clase padre no posee.
+
+```python
+# Superclase (Clase Padre Base)
+class Coche:
+    ruedas = 4
+    def __init__(self, marca):
+        self.marca = marca
+
+# Subclase (Clase Hija Especializada que hereda de Coche)
+class CocheVolador(Coche):
+    ruedas = 6  # Sobrescritura del atributo de clase padre
+
+    def __init__(self, volando=False):
+        self.volando = volando  # Atributo exclusivo
+
+    def vuela(self):
+        self.volando = True     # Método exclusivo de la subclase
+```
+
+> **Restricción Unidireccional de Flujo**: La herencia viaja estrictamente de padres a hijos. Un objeto instanciado desde la subclase `CocheVolador` puede invocar funciones del padre. Sin embargo, un objeto base de la superclase `Coche` **no tiene acceso** a las propiedades del hijo; intentar invocar `mi_coche_base.vuela()` lanzará un error crítico de tipo **`AttributeError`**.
+
+
+
+
+<hr>
