@@ -373,3 +373,170 @@ list_mix[1] = 10                       # Modificación directa de un elemento
 
 
 <hr>
+
+
+
+
+
+
+
+# Python: Flujos de Control, Bucles y Excepciones
+
+Este repositorio contiene los mecanismos que permiten romper la ejecución puramente secuencial de un programa en Python. Aprenderás a tomar decisiones condicionales, repetir tareas de forma automática, controlar la interrupción de bucles y gestionar errores en tiempo de ejecución sin detener el programa.
+
+---
+
+## Índice
+1. [Sintaxis de Línea e Indentación](#1-sintaxis-de-línea-e-indentación)
+2. [Estructuras Condicionales (if / elif / else)](#2-estructuras-condicionales-if--elif--else)
+3. [Estructura de Patrones (match / case)](#3-estructura-de-patrones-match--case)
+4. [Bucle `for`](#4-bucle-for)
+5. [Bucle `while`](#5-bucle-while)
+6. [Sentencias de Control (`break` / `continue` / `pass`)](#6-sentencias-de-control-break--continue--pass)
+7. [Control de Excepciones (try / except / finally)](#7-control-de-excepciones-try--except--finally)
+
+---
+
+## 1. Sintaxis de Línea e Indentación
+A diferencia de otros lenguajes de programación que utilizan llaves `{}` o palabras clave como `end` para delimitar los bloques de código, **Python utiliza la indentación (tabulaciones o espacios)**.
+
+*   **Estructura:** Cualquier sentencia que abra un bloque de control (`if`, `for`, `while`, `try`, etc.) termina obligatoriamente con **dos puntos `:`**. Todo el código que pertenezca a ese bloque debe estar desplazado hacia la derecha.
+*   **Bloques anidados:** Si metes una estructura dentro de otra, el nivel de indentación se acumula (ej: un `if` dentro de un `for` requerirá doble tabulación).
+*   **¿Tabulaciones o espacios?:** Aunque visualmente parecen similares, mezclar tabulaciones y espacios puede corromper el código al cambiar de editor. El estándar dictamina usar **4 espacios**. En entornos modernos como Jupyter Notebook, al pulsar la tecla `Tab`, el IDE lo traduce automáticamente a 4 espacios para mantener la transparencia y compatibilidad.
+
+---
+
+## 2. Estructuras Condicionales (`if` / `elif` / `else`)
+Permiten bifurcar el camino que sigue el código evaluando operaciones booleanas. **Únicamente se ejecuta el primer bloque cuya condición devuelva `True`**; en ese instante, Python ignora por completo el resto de condiciones anidadas.
+
+*   **`if`**: Condición inicial obligatoria.
+*   **`elif`** (abreviación de *else if*): Permite evaluar nuevas condiciones de forma secuencial si las anteriores resultaron falsas. Se pueden añadir tantos como se necesiten.
+*   **`else`**: Bloque opcional de salida por defecto; se ejecuta si y solo si ninguna de las condiciones previas fue verdadera.
+
+### Ejemplo de flujo optimizado:
+Al estructurar condicionales de forma secuencial limpia, no es necesario acotar los rangos numéricos por ambos extremos si ya vienen filtrados por el orden superior:
+
+```python
+nota = 7.5
+
+if nota < 0 or nota > 10:
+    print("Nota errónea") # Anticipación y control de errores
+elif nota < 5:
+    print("Suspenso")     # Ya sabemos que está entre 0 y 5
+elif nota < 7:
+    print("Bien")         # Ya sabemos que está entre 5 y 7
+elif nota < 9:
+    print("Notable")      # Ya sabemos que está entre 7 y 9
+else:
+    print("Sobresaliente")# Ya sabemos que está entre 9 y 10
+```
+
+---
+
+## 3. Estructura de Patrones (`match` / `case`)
+Introducido formalmente a partir de **Python 3.10** (*Structural Pattern Matching*), actúa de forma equivalente a la sentencia `switch` de otros lenguajes de programación. Ofrece una alternativa más limpia y legible que una sucesión interminable de bloques `if/elif`.
+
+*   **Sintaxis:** Se evalúa una variable frente a múltiples escenarios (`case`).
+*   **Caso por defecto (`case _`):** El guión bajo actúa como un comodín (*wildcard*) para capturar cualquier valor que no haya coincidido con los casos anteriores.
+
+```python
+day = "lunes"
+
+match day:
+    case "lunes":
+        task = "Hacer la compra"
+    case "martes":
+        task = "Ir al gimnasio"
+    case _:
+        task = "Día no válido o descanso"
+```
+
+---
+
+## 4. Bucle `for`
+El bucle `for` se utiliza para **recorrer de forma iterativa los elementos de un objeto iterable** (como listas, tuplas o incluso cadenas de texto). Cuenta con una *variable de ejecución* interna que se actualiza automáticamente tomando el valor del elemento actual en cada vuelta.
+
+### Formas fundamentales de iteración en Python:
+
+1.  **Iteración Directa (`for elemento in lista`):**
+    Accede directamente al valor de cada ítem. Es la forma más limpia, eficiente y recomendada si no necesitas conocer la posición numérica del elemento.
+    ```python
+    for fruta in ["manzana", "banana"]:
+        print(fruta)
+    ```
+
+2.  **Por Índice (`for i in range(len(lista))`):**
+    Utiliza la combinación de la función de longitud `len()` y de rango `range()` para generar una secuencia numérica de índices (0, 1, 2...). El elemento se debe extraer manualmente usando corchetes (`lista[i]`). Es útil si necesitas modificar elementos de la lista original basándote en su posición.
+    ```python
+    colores = ["rojo", "verde"]
+    for i in range(len(colores)):
+        print(i, colores[i])
+    ```
+
+3.  **Con Enumerate (`for i, elemento in enumerate(lista)`):**
+    La forma óptima (*pythónica*) cuando necesitas trabajar tanto con el **índice numérico como con el valor** al mismo tiempo. Devuelve una estructura limpia en forma de tupla desempaquetada por cada iteración.
+    ```python
+    for index, name in enumerate(["Pedro", "Mariano"]):
+        print(f"Posición {index}: {name}")
+    ```
+
+### Funciones auxiliares clave:
+*   **`range(start, stop, step)`**: Genera un iterable numérico. El límite superior (*stop*) **nunca se incluye**. Admite pasos negativos para realizar cuentas regresivas.
+    *   `range(6)` → `[0, 1, 2, 3, 4, 5]`
+    *   `range(2, 6)` → `[2, 3, 4, 5]`
+    *   `range(0, 6, 2)` → `[0, 2, 4]`
+    *   `range(10, -1, -2)` → `[10, 8, 6, 4, 2, 0]`
+
+---
+
+## 5. Bucle `while`
+Repite la ejecución de un bloque de código **mientras una condición lógica devuelva `True`**. A diferencia del `for`, el número de iteraciones no está predeterminado por el tamaño de una colección.
+
+### Patrón estándar de implementación:
+Para evitar **bucles infinitos** (que saturan el procesador y congelan el entorno de ejecución), se debe seguir rigurosamente este esquema de tres pasos:
+1.  Declara e inicializa una **variable de control** fuera del bucle.
+2.  Define una **condición límite** lógica en la cabecera del `while`.
+3.  **Modifica/actualiza** la variable de control obligatoriamente en el cuerpo interno antes de terminar la iteración.
+
+```python
+i = 0  # 1. Inicialización
+while i < 5:  # 2. Condición límite
+    print(i)
+    i = i + 1  # 3. Actualización de la variable
+```
+
+---
+
+## 6. Sentencias de Control (`break` / `continue` / `pass`)
+Son instrucciones que se colocan estratégicamente dentro de los bucles (`for` o `while`) para alterar el flujo normal de las iteraciones y optimizar el rendimiento del software.
+
+*   **`break`**: Rompe forzadamente la ejecución del bucle por completo. Utilizado para detener búsquedas en colecciones masivas una vez que el objetivo ha sido localizado, evitando procesar miles de datos residuales innecesarios.
+*   **`continue`**: Interrumpe la iteración actual y **salta inmediatamente al siguiente elemento del iterable**, ignorando todo el código que quede pendiente por ejecutar debajo de él dentro de esa vuelta.
+*   **`pass`**: Una sentencia nula. No realiza ninguna acción operativa; se usa exclusivamente como marcador de posición (*placeholder*) cuando la sintaxis de Python exige tener código escrito en un bloque condicional o función pero aún no se ha implementado la lógica.
+
+---
+
+## 7. Control de Excepciones (`try` / `except` / `finally`)
+Cuando ocurre un error crítico en Python (como consultar un índice que no existe con un `IndexError` o invocar una variable no declarada con un `NameError`), el programa detiene su ejecución por completo de forma abrupta. Las estructuras `try/except` permiten **capturar estos errores para controlarlos, tomar decisiones alternativas y dejar que el programa continúe funcionando**.
+
+### Sintaxis Completa:
+*   **`try`**: Envuelve el bloque de código sospechoso o impredecible que podría provocar un fallo.
+*   **`except`**: Define la respuesta en caso de que ocurra un error dentro del bloque `try`. Se recomienda atrapar errores específicos en lugar de usar un bloque genérico. Se puede instanciar el error usando la palabra clave `as` para analizar su mensaje interno.
+*   **`finally`**: Bloque opcional. **Se ejecuta siempre**, sin importar si el código funcionó correctamente o si saltó una excepción. Es sumamente útil para liberar recursos, cerrar conexiones a bases de datos o archivos abiertos.
+
+```python
+lista = [1, 2, 3]
+
+try:
+    print(lista[5])  # Forzamos un IndexError deliberado
+except IndexError as error_detallado:
+    print(f"Se ha controlado un error de índice: {error_detallado}")
+except NameError:
+    print("Error controlado en el nombre de una variable.")
+except Exception as e:
+    print(f"Cualquier otro tipo de error imprevisto: {e}")
+finally:
+    print("Fin del bloque de control. Esta línea se imprime pase lo que pase.")
+
+print("El programa continúa su ejecución normal sin caerse.")
+```
