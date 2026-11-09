@@ -231,4 +231,145 @@ Namespaces are one honking great idea -- let's do more of those!
 
 
 
+# Python Basics II: Operaciones, Métodos y Listas
 
+Este repositorio contiene los conceptos teóricos sobre la manipulación de variables, el uso de funciones y métodos integrados, y la introducción a las colecciones de datos a través de las listas en Python.
+
+---
+
+## Índice
+1. [Operaciones Aritméticas Avanzadas](#1-operaciones-aritméticas-avanzadas)
+2. [Operaciones Comparativas](#2-operaciones-comparativas)
+3. [Operaciones con Booleanos (Álgebra de Boole)](#3-operaciones-con-booleanos-álgebra-de-boole)
+4. [Funciones Built-in Comunes](#4-funciones-built-in-comunes)
+5. [Métodos en Python](#5-métodos-en-python)
+6. [Listas](#6-listas)
+7. [Gestión de Errores Comunes](#7-gestión-de-errores-comunes)
+
+---
+
+## 1. Operaciones Aritméticas Avanzadas
+Además de los operadores aritméticos básicos ya conocidos (`+`, `-`, `*`, `/`, `**`, `//`, `%`), el orden y las reglas de prioridad se mantienen estrictamente fieles a las matemáticas convencionales.
+
+*   **Propiedades algebraicas:** Python respeta las propiedades conmutativa, asociativa y distributiva.
+*   **El Paréntesis `()`:** Es el elemento prioritario que permite agrupar operaciones e invalidar el orden de prioridad estándar para forzar un cálculo específico.
+
+### El Módulo `math`
+Para realizar operaciones complejas que van más allá del núcleo básico de Python, se requiere importar librerías matemáticas predefinidas utilizando la instrucción `import math`.
+
+Algunas de las funciones más relevantes del módulo son:
+*   `math.sqrt(x)`: Calcula la raíz cuadrada de un número (devuelve un float).
+*   `math.fabs(x)`: Devuelve el valor absoluto de un número real como float. *(Nota: Python dispone también de la función nativa `abs(x)` que mantiene el tipo original entero o float)*.
+*   `math.floor(x)`: Redondea un número hacia abajo, al entero más próximo.
+*   `math.ceil(x)`: Redondea un número hacia arriba, al entero más próximo.
+*   `math.pi`: Constante matemática que devuelve el valor de π (`3.141592653589793`).
+
+```python
+import math
+
+print(math.sqrt(25))  # Resultado: 5.0
+print(math.floor(4.7)) # Resultado: 4
+print(math.ceil(4.3))  # Resultado: 5
+```
+
+---
+
+## 2. Operaciones Comparativas
+Las operaciones de comparación evalúan las relaciones entre dos valores y devuelven **siempre** un tipo de dato booleano (`True` o `False`).
+
+*   `==`: Igualdad. *(¡Cuidado! No confundir con el operador de asignación `=`).*
+*   `!=`: Desigualdad o diferencia.
+*   `>`: Mayor que.
+*   `<`: Menor que.
+*   `>=`: Mayor o igual que.
+*   `<=`: Menor o igual que.
+
+### Comportamientos específicos:
+*   **Igualdad e Interferencia de Tipos:** Python considera que el entero `1` es igual al float `1.0` (`1 == 1.0` es `True`), así como `True == 1` y `False == 0` debido a su representación binaria subyacente. Sin embargo, comparar texto con números bajo igualdad simplemente devolverá `False` sin lanzar errores (ej: `6 == "cadena"` es `False`).
+
+---
+
+## 3. Operaciones con Booleanos (Álgebra de Boole)
+Cuando se manejan múltiples criterios simultáneos, se recurre a las puertas lógicas que implementan el álgebra booleana. Las tres operaciones fundamentales en Python son:
+
+*   **`and`**: Devuelve `True` **únicamente si todas** las condiciones evaluadas son verdaderas. Si una sola es falsa, el resultado es `False`.
+*   **`or`**: Devuelve `True` si **al menos una** de las condiciones evaluadas es verdadera. Solo devuelve `False` si todas lo son.
+*   **`not`**: Invierte el valor del booleano (el operador de negación). `not True` se convierte en `False` y viceversa.
+
+### Reglas nemotécnicas de evaluación rápido:
+```python
+condicion_final = cond_1 and cond_2 and cond_3  # Requiere que TODO sea True
+condicion_rapida = cond_1 or cond_2 or cond_3    # Basta con que UNO sea True
+```
+
+---
+
+## 4. Funciones Built-in Comunes
+Las funciones integradas (*Built-in*) vienen incorporadas por defecto dentro del intérprete de Python sin necesidad de importar librerías. Su sintaxis básica requiere pasar los datos necesarios dentro de sus paréntesis: `nombre_funcion(argumentos)`.
+
+*   **`len(objeto)`**: Devuelve la cantidad de elementos o caracteres que posee una colección o cadena de texto.
+*   **`max(argumentos / lista)`**: Identifica y extrae el valor máximo entre un conjunto de números o elementos de una lista.
+*   **`min(argumentos / lista)`**: Identifica y extrae el valor mínimo entre un conjunto de números o elementos de una lista.
+
+```python
+lista = [23, 5, 8]
+print(max(lista))  # Resultado: 23
+print(len(lista))  # Resultado: 3
+```
+
+---
+
+## 5. Métodos en Python
+Un **método** es una función que le pertenece de forma exclusiva a un tipo de objeto o variable en concreto. Se invoca utilizando la sintaxis del punto: `objeto.metodo()`. 
+
+*   **Importante:** Aunque el método no requiera parámetros o argumentos de entrada, **los paréntesis finales `()` son obligatorios** para forzar su ejecución.
+
+### Métodos comunes para Cadenas de Texto (`str`):
+*   `.upper()`: Transforma todo el texto a letras mayúsculas.
+*   `.lower()`: Transforma todo el texto a letras minúsculas.
+*   `.replace(antiguo, nuevo, [max_coincidencias])`: Reemplaza caracteres del string por unos nuevos. Por defecto modifica todas las apariciones a menos que se defina un límite numérico en el tercer argumento.
+*   `.split(caracter)`: Divide una cadena de texto en múltiples partes utilizando el carácter indicado como separador, devolviendo los fragmentos guardados dentro de una lista.
+*   `.index(caracter)`: Devuelve la posición de la primera coincidencia del carácter buscado dentro de la cadena.
+
+```python
+texto = "String de ejemplo"
+print(texto.upper())        # "STRING DE EJEMPLO"
+print(texto.split(' '))     # ['String', 'de', 'ejemplo']
+```
+
+---
+
+## 6. Listas
+Las listas son una de las colecciones de datos más versátiles e importantes en Python. Permiten agrupar y almacenar conjuntos de variables u objetos bajo una misma estructura. Sus elementos se separan por comas y se envuelven entre corchetes `[]`.
+
+### Características principales:
+1.  **Mutables:** Su contenido puede ser modificado, expandido, reordenado o eliminado después de haber sido creada en memoria.
+2.  **Ordenadas:** Cada elemento tiene una posición fija e indexada.
+
+### Reglas de indexación y acceso:
+*   **Índice Base Cero:** El conteo de las posiciones de una lista comienza siempre desde el número **`0`**. El primer elemento está en el índice `0`, el segundo en el `1`, etc.
+*   **Anidamiento:** Se pueden guardar listas dentro de otras listas. Para acceder a sus elementos internos se concatenan corchetes consecutivamente (ej: `lista[4][2]`).
+
+```python
+list_mix = ["texto", 1, 55.78, True]  # Permite almacenar tipos de datos distintos
+list_mix[1] = 10                       # Modificación directa de un elemento
+```
+
+### Métodos característicos de las Listas:
+*   `.append(elemento)`: Añade un elemento al final de la lista. *(Nota: Este método modifica la lista "in-place" y devuelve `None`).*
+*   `.index(elemento)`: Devuelve la posición (índice) de la primera aparición del elemento especificado.
+*   `.count(elemento)`: Cuenta cuántas veces se repite el elemento indicado dentro de la lista.
+*   `.clear()`: Elimina por completo todos los elementos internos, dejando la lista vacía (`[]`).
+
+---
+
+## 7. Gestión de Errores Comunes
+
+*   **`ZeroDivisionError: division by zero`**: Se genera al intentar realizar una división aritmética cuyo denominador sea estrictamente cero `0`. Las indeterminaciones matemáticas provocan caídas del programa.
+*   **`ValueError: math domain error`**: Ocurre al solicitar una operación matemática fuera de su dominio real accesible, como intentar calcular la raíz cuadrada de un número negativo utilizando `math.sqrt()`.
+*   **`TypeError: '>' not supported between instances...`**: Ocurre al intentar hacer comparaciones lógicas de magnitud (como mayor o menor que) entre variables de tipos incompatibles (ej: comparar un `float` con un `str`).
+*   **`TypeError: 'bool' object is not subscriptable`**: Ocurre cuando se intenta utilizar corchetes de indexación `[]` sobre un tipo de dato primitivo que no es una colección (como un booleano o un entero).
+
+
+
+<hr>
