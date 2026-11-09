@@ -681,3 +681,143 @@ nueva_lista = [expresion_transformacion for elemento in iterable if filtro_condi
 
 
 <hr>
+
+
+
+# Python: Modularidad y Programación Funcional
+
+Este repositorio contiene las **funciones en Python**. Las funciones son bloques de código reutilizables y estructurados que permiten encapsular colecciones de operaciones bajo un enfoque de entrada/salida. Son esenciales para modularizar programas, mitigar la redundancia de código y optimizar el mantenimiento del software.
+
+---
+
+## Índice
+1. [Arquitectura y Cabecera de una Función](#1-arquitectura-y-cabecera-de-una-función)
+2. [Tipos de Variables y Espacios de Nombres (*Scope*)](#2-tipos-de-variables-y-espacios-de-nombres-scope)
+3. [Tipos de Argumentos en Python](#3-tipos-de-argumentos-en-python)
+4. [Estructuras Avanzadas: Recursividad](#4-estructuras-avanzadas-recursividad)
+5. [Documentación Profesional de Funciones (*Docstrings*)](#5-documentación-profesional-de-funciones-docstrings)
+6. [Arquitectura de Proyectos, Buenas Prácticas y Control de Versiones](#6-arquitectura-de-proyectos-buenas-prácticas-y-control-de-versiones)
+
+---
+
+## 1. Arquitectura y Cabecera de una Función
+
+Una función actúa como un módulo lógico. Su declaración almacena las operaciones en la memoria del sistema sin ejecutarlas de forma inmediata; la ejecución propiamente dicha se produce únicamente cuando la función es explícitamente invocada.
+
+### Sintaxis Estructural
+```python
+def nombre_funcion(parametro_1, parametro_2):
+    # Cuerpo indentado de la función
+    operaciones_logicas = parametro_1 + parametro_2
+    return operaciones_logicas
+```
+
+### Reglas Críticas del `return`
+*   **Finalización del Flujo**: La sentencia `return` actúa como la frontera de salida de la función. Cualquier línea de código dispuesta inmediatamente después de un `return` es completamente omitida e ignorada por el intérprete.
+*   **Múltiples Puntos de Salida**: Una función puede incorporar varios `return` si se encuentran ramificados dentro de flujos de control disjuntos (estructuras `if/elif/else`).
+*   **Retorno Implícito de `None`**: Si una función ejecuta operaciones internas (como llamar a un `print()`) pero carece de una sentencia `return` explícita, devolverá de forma automática el objeto nulo **`None`**.
+*   **Retornos Múltiples**: Si se requiere extraer más de un output, se listan separados por comas (`return output1, output2`). Python los encapsulará y devolverá empaquetados bajo una **Tupla (`tuple`)**, que puede ser desempaquetada por el receptor.
+
+---
+
+## 2. Tipos de Variables y Espacios de Nombres (*Scope*)
+
+Las funciones implementan su propio *namespace* o entorno aislado en memoria, estableciendo una barrera estricta entre dos ámbitos de variables:
+
+*   **Variables Locales**: Cualquier variable interna declarada o procesada dentro del cuerpo de la función nace y muere de forma exclusiva para ese bloque de ejecución. Si se intenta realizar una llamada a una variable local desde el entorno global exterior del script, Python arrojará un error crítico de tipo **`NameError`**.
+*   **Variables Globales**: Aquellas variables asignadas en la raíz principal del programa. Son legibles desde el interior de las funciones, pero no modificables de forma directa sin alterar el orden del flujo.
+
+---
+
+## 3. Tipos de Argumentos en Python
+
+Python provee una flexibilidad absoluta al instanciar argumentos de entrada, permitiendo clasificar los parámetros bajo 4 arquitecturas operativas:
+
+### 1. Argumentos Posicionales
+Son los parámetros convencionales. Al realizar la invocación del método, los argumentos deben respetar rigurosamente **el mismo orden secuencial** bajo el que fueron declarados en la cabecera.
+*   *Flexibilidad por Nombre*: Es posible romper el orden posicional si en la llamada se especifican explícitamente las palabras clave asociadas (ej: `multiplica(x3=2, x1=4)`).
+*   *Obligatoriedad*: Salvo que se definan valores por defecto, todos los parámetros posicionales son estrictamente obligatorios. Su omisión lanza un fallo de tipo `TypeError`.
+
+### 2. Argumentos Variables (`*args`)
+Permiten diseñar funciones capaces de procesar un volumen indeterminado de parámetros sin fijar un límite numérico en la cabecera.
+*   **Sintaxis**: Se antepone un único asterisco `*` al nombre del argumento (el estándar comunitario dicta usar **`*args`**, aunque operativamente responde a cualquier etiqueta como `*marcas`).
+*   **Naturaleza**: El intérprete captura todos los datos posicionales sobrantes y los almacena dentro de una **Tupla**. Al ser un iterable, su procesamiento interno exige la implementación de bucles `for`.
+
+### 3. Argumentos Variables por Clave-Valor (`**kwargs`)
+Permiten inyectar una cantidad indeterminada de parámetros estructurados bajo un formato asociativo dinámico.
+*   **Sintaxis**: Se anteponen dos asteriscos `**` al nombre del argumento (estándar: **`**kwargs`** o **`**kargs`**).
+*   **Naturaleza**: El intérprete mapea los argumentos capturando la estructura y guardándola dentro de un **Diccionario (`dict`)**, lo que exige procesarlos mediante el método `.items()` para aislar sus claves y valores.
+
+> **Regla de Convivencia**: Si una función combina estos tres tipo de argumentos en una sola cabecera, se debe respetar estrictamente el siguiente orden de izquierda a derecha: **`(argumentos_posicionales, *args, **kwargs)`**.
+
+### 4. Argumentos por Defecto (*Keyword Arguments*)
+Son parámetros preinicializados en la propia cabecera de la función mediante una asignación `=` (ej: `incidencia=False`). 
+*   **Comportamiento**: Si el usuario no inyecta ese dato al llamar a la función, esta se ejecuta con el valor predeterminado. Si el usuario provee un dato nuevo, este sobrescribe el valor por defecto.
+*   **Restricción de Sintaxis**: Los argumentos con valores por defecto deben colocarse **obligatoriamente al final** de la cabecera, después de cualquier argumento posicional simple. Romper esta regla genera un error inmediato de tipo **`SyntaxError: non-default argument follows default argument`**.
+
+---
+
+## 4. Estructuras Avanzadas: Recursividad
+
+La **recursividad** describe una técnica de programación avanzada donde **una función se invoca a sí misma dentro de su propia definición**, comportándose de forma análoga a un bucle estructural.
+
+### Requisitos de una Función Recursiva Correcta
+1.  **Caso Base (Condición de Salida)**: Una bifurcación lógica explícita (normalmente un `if`) que detiene la autorreferencia y retorna un valor directo cuando se alcanza el límite inferior. Su ausencia provoca un bucle infinito que colapsa la memoria del sistema.
+2.  **Caso Recursivo**: La instrucción que vuelve a llamar a la función, modificando su argumento original hacia un estado progresivamente más cercano al caso base (ej: `x - 1`).
+
+### Caso de Estudio Tradicional: El Factorial ($n!$)
+La lógica matemática dicta que el factorial de un número equivale a multiplicar ese número por el factorial de su predecesor ($5! = 5 \times 4!$). Su implementación recursiva limpia se estructura de la siguiente manera:
+
+```python
+def factorial(x):
+    if x == 1:          # 1. Caso Base
+        return x
+    else:               # 2. Caso Recursivo hacia el Caso Base
+        return x * factorial(x - 1)
+```
+
+---
+
+## 5. Documentación Profesional de Funciones (*Docstrings*)
+
+En Python, la documentación de las funciones no se considera un elemento pasivo, sino un componente operativo integrado. Un **`docstring`** es un bloque de comentarios multilínea delimitado por tres comillas simples `'''` o dobles `"""` dispuesto inmediatamente en la primera línea interna de la función.
+
+*   **Contenido Estándar**: Un buen docstring debe reportar la descripción del comportamiento general del método, la tipificación y finalidad de los argumentos de entrada esperados, y el formato exacto del output de salida.
+*   **El Atributo Mágico `.__doc__`**: Python expone operativamente esta documentación. Ejecutar `print(nombre_funcion.__doc__)` extrae y muestra por pantalla el bloque informativo textual exacto, permitiendo auditar el código sin leer el script fuente.
+
+---
+
+## 6. Arquitectura de Proyectos, Buenas Prácticas y Control de Versiones
+
+### Estructura y Modularización de Archivos
+En entornos profesionales de desarrollo de software, el código no se acumula en un único script masivo, sino que se distribuye estratégicamente en capas separadas dentro del directorio de trabajo:
+*   `variables.py`: Archivo destinado en exclusiva a la declaración de constantes, URLs de servidores y configuraciones base.
+*   `funciones.py`: Biblioteca técnica interna donde se almacenan y documentan todas las funciones operativas del sistema.
+*   `main.py`: El script neurálgico ejecutor. Importa los recursos de los archivos satélites para correr la lógica de negocio en líneas compactas:
+
+```python
+# Importación limpia con el uso de alias
+import funciones as f
+import variables as v
+
+resultado = f.sumar(v.num1, v.num2)
+```
+
+### Prevención frente a Gestión de Excepciones
+El diseño robusto de funciones exige anteponer la **Prevención de Errores** (comprobaciones lógicas explícitas mediante condicionales `if`) para verificar la consistencia de los tipos de datos en los argumentos antes de delegar el control a la **Gestión de Excepciones** (bloques `try/except`), la cual debe reservarse para capturar fallos impredecibles en tiempo de ejecución.
+
+### Seguridad y Limpieza en Git: El Archivo `.gitignore`
+Un archivo `.gitignore` es un fichero de configuration plano situado en la raíz del proyecto que le indica formalmente a Git qué elementos **nunca debe subir ni rastrear** en el repositorio de control de versiones remoto (como GitHub). Es mandatorio configurarlo para evitar fugas de información y sobrecarga de espacio excluyendo:
+*   *Credenciales y Secretos*: Archivos `.env`, tokens de APIs y contraseñas de bases de datos locales.
+*   *Dependencias y Entornos*: Directorios de librerías gigantescas como `.venv/` o `node_modules/`.
+*   *Compilados y Caché*: Archivos generados automáticamente al ejecutar código Python, tales como las carpetas `__pycache__/` o archivos con extensiones `.pyc` y `.exe`.
+
+
+
+
+
+<hr>
+
+
+
+
