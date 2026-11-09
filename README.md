@@ -540,3 +540,144 @@ finally:
 
 print("El programa continúa su ejecución normal sin caerse.")
 ```
+
+
+
+
+
+<hr>
+
+
+
+
+
+
+
+
+# Python: Estructuras de Datos y Colecciones
+
+Este repositorio contiene las **colecciones de Python**, estructuras de datos fundamentales que permiten almacenar y gestionar múltiples elementos bajo una sola variable. Comprender sus propiedades específicas de orden, mutabilidad y rendimiento es crítico para optimizar el desarrollo de software.
+
+---
+
+## Índice
+1. [Propiedades Globales de las Colecciones](#1-propiedades-globales-de-las-colecciones)
+2. [Listas (`list`) y Operaciones Especiales](#2-listas-list-y-operaciones-especiales)
+3. [Tuplas (`tuple`)](#3-tuplas-tuple)
+4. [Diccionarios (`dict`)](#4-diccionarios-dict)
+5. [Sets o Conjuntos (`set`)](#5-sets-o-conjuntos-set)
+6. [Conversiones de Tipos entre Colecciones](#6-conversiones-de-tipos-entre-colecciones)
+7. [Comprensión de Listas (*List Comprehension*)](#7-comprensión-de-listas-list-comprehension)
+
+---
+
+## 1. Propiedades Globales de las Colecciones
+
+Las colecciones nativas de Python se diferencian según tres características clave: su **orden**, su **mutabilidad** y la admisión de **elementos duplicados**.
+
+### Tabla Comparativa de Propiedades
+
+| Colección | Sintaxis | Ordenada | Mutable | Permite Duplicados | Mecanismo de Acceso |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| **Lista** | `[a, b, c]` | **Sí** | **Sí** | **Sí** | Por índice numérico: `lista[0]` |
+| **Tupla** | `(a, b, c)` | **Sí** | No | **Sí** | Por índice numérico: `tupla[0]` |
+| **Diccionario** | `{"key": valor}` | **Sí** | **Sí** | No (Claves únicas) | Por su clave asociada: `dict["key"]` |
+| **Set (Conjunto)** | `{a, b, c}` | No | **Sí** | No (Valores únicos) | Por iteración / Operaciones lógicas |
+
+---
+
+## 2. Listas (`list`) y Operaciones Especiales
+Colecciones mutables y ordenadas donde los decimales numéricos siempre se representan utilizando un punto (`.`) para evitar confusiones de sintaxis con la coma (`,`), la cual separa los elementos de la colección.
+
+### El Arte del Slicing (Particionado)
+Permite extraer porciones de secuencias utilizando la sintaxis extendida `lista[inicio:fin:paso]`.
+*   **`lista[inicio:fin]`**: Extrae desde el índice `inicio` hasta el valor anterior a `fin` (el límite derecho **nunca** se incluye).
+*   **`lista[:fin]`**: Toma elementos partiendo desde la posición inicial (`0`) hasta el índice `fin - 1`.
+*   **`lista[inicio:]`**: Captura todo el contenido desde el `inicio` hasta el último ítem de la lista.
+*   **Índices Negativos**: El índice `-1` referencia la última posición y `-2` la penúltima, facilitando lecturas reversas.
+*   **Paso Negativo (`lista[::-1]`)**: Invierte de forma completa el orden de los elementos recorriendo la estructura de derecha a izquierda.
+
+### Métodos de Inserción y Eliminación
+*   `.append(item)`: Añade un elemento al final. Modifica la estructura *in-place* y retorna un valor nulo (`None`).
+*   `.insert(indice, item)`: Inserta un elemento en una posición específica desplazando el resto a la derecha.
+*   `.remove(valor)`: Elimina la primera coincidencia del valor buscado. Si no existe, lanza un `ValueError`.
+*   `.pop(indice)`: Elimina el elemento en el índice indicado y lo **retorna**, permitiendo almacenarlo en una variable externa.
+
+### Métodos de Ordenación y Análisis
+*   `sorted(lista)`: Función integrada que analiza la lista y devuelve una **nueva lista completamente ordenada**, manteniendo intacta la lista original.
+*   `.sort()`: Método exclusivo de listas que ordena los elementos **machacando e invalidando el orden de la estructura original**.
+*   `.reverse()`: Invierte permanentemente el orden de los elementos en la lista original *in-place*.
+*   `.count(valor)`: Contabiliza y devuelve el número total de apariciones del valor especificado.
+
+---
+
+## 3. Tuplas (`tuple`)
+Colecciones indexadas, ordenadas e **inmutables**. Una vez declaradas en memoria no se pueden expandir, recortar ni reasignar. Son idóneas para almacenar constantes y colecciones fijas de datos.
+
+*   **Sintaxis Unitaria**: Para declarar una tupla con un único elemento es obligatorio añadir una coma final `(valor,)`. De lo contrario, el intérprete eliminará los paréntesis y lo procesará como un tipo de dato simple.
+*   **Anidamiento**: Soportan el almacenamiento de otras colecciones complejas en su interior (ej: tuplas dentro de listas o viceversa).
+*   **Operador Suma (`+`)**: Al no poder modificarse, la forma de "añadir" elementos consiste en sumar dos tuplas distintas para generar una nueva tupla resultante en memoria.
+
+---
+
+## 4. Diccionarios (`dict`)
+Colecciones mutables que rompen el acceso posicional para implementar mapeos bajo la estructura asociativa **`clave: valor`**. Aunque a partir de las versiones recientes de Python preservan el orden de inserción, su fortaleza reside en la indexación por clave.
+
+### Operativa y Gestión Segura
+*   **Acceso Estándar (`dict[clave]`)**: Extrae el valor asociado. Si la clave consultada no existe dentro del diccionario, Python interrumpe el flujo y arroja un error crítico de tipo **`KeyError`**.
+*   **Acceso Seguro (`.get(clave, valor_defecto)`)**: Alternativa óptima que evita la caída del programa. Si la clave existe devuelve el valor; si no existe, devuelve `None` o el valor de contingencia opcional definido en el segundo argumento.
+*   **Análisis Interno**:
+    *   `.keys()`: Devuelve una vista con todas las llaves declaradas.
+    *   `.values()`: Devuelve una vista con todos los valores guardados.
+    *   `.items()`: Devuelve una estructura iterable compuesta por tuplas interconectadas de tipo `(clave, valor)`.
+
+---
+
+## 5. Sets o Conjuntos (`set`)
+Colecciones mutables, desordenadas y compuestas exclusivamente por **elementos únicos**. Son la traslación directa de los conjuntos de las matemáticas puras, ideales para resolver problemas de unicidad.
+
+*   **Declaración Vacía**: Un conjunto vacío **nunca** se declara con llaves vacías `{}`, ya que Python prioriza esa sintaxis para crear un diccionario. Se debe invocar al constructor explícito **`set()`**.
+*   **Unicidad**: Cualquier intento de insertar duplicados será ignorado silenciosamente por la estructura. Al consultar su longitud `len()`, reportará únicamente los registros únicos.
+*   **Operadores de Álgebra de Conjuntos**:
+    *   **Intersección (`set1 & set2`)**: Extrae elementos presentes en ambos conjuntos simultáneamente.
+    *   **Unión (`set1 | set2`)**: Fusiona ambos conjuntos eliminando cualquier coincidencia duplicada.
+    *   **Diferencia (`set1 - set2`)**: Aísla los elementos que pertenezcan en exclusiva al primer conjunto.
+
+---
+
+## 6. Conversiones de Tipos entre Colecciones
+Python provee los constructores nativos `list()`, `tuple()`, `set()` y `dict()` para transformar una estructura en otra de forma dinámica.
+
+*   **Limpieza Express de Duplicados**: Pasar una lista con elementos repetidos a conjunto y retornarla a lista elimina todas las réplicas en una línea de código: `lista_limpia = list(set(lista_sucia))`.
+*   **Mutabilidad Temporal**: Si se requiere alterar una tupla, se convierte a lista mediante `list()`, se opera con los métodos mutables (`.append()`, `.remove()`) y se transforma nuevamente a tupla con `tuple()`.
+*   **Diccionarios Compuestos**: Para construir un diccionario a partir de una secuencia usando `dict()`, los elementos de origen deben estar estructurados en pares correlativos secuenciales (ej: una lista compuesta por tuplas binarias `[("clave", "valor")]`).
+
+---
+
+## 7. Comprensión de Listas (*List Comprehension*)
+Es una sintaxis matemática compacta y avanzada que permite instanciar y rellenar nuevas listas a partir de iterables existentes, reduciendo el código y reemplazando los bucles `for` tradicionales y sus llamadas anidadas a `.append()`.
+
+### Estructura General
+```python
+nueva_lista = [expresion_transformacion for elemento in iterable if filtro_condicional]
+```
+
+### Variaciones de Estructura Lógica
+1.  **Filtro Condicional Simple (`if` al final)**:
+    El elemento solo se procesará e incluirá en la lista final si supera con éxito la validación lógica.
+    ```python
+    # Filtrar únicamente los números pares
+    pares = [n for n in [1, 2, 3, 4, 5, 6] if n % 2 == 0] # [2, 4, 6]
+    ```
+2.  **Operador Condicional Doble (`if / else` al inicio)**:
+    Si la condición se cumple se aplica la primera transformación; si es falsa se aplica obligatoriamente la instrucción dispuesta tras el `else`.
+    ```python
+    # Elevar impares al cuadrado, mantener intactos los pares
+    resultado = [x**2 if x % 2 == 1 else x for x in range(3, 7)] # [9, 4, 25, 6]
+    ```
+
+
+
+
+
+<hr>
